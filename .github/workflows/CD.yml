@@ -11,18 +11,22 @@ on:
       - main
 
 jobs:
-  merged:
+  deploy_image:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18.x"
-          cache: "npm"
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm test
+      - name: Build docker image
+      - run: docker build . -t app-image
+
+      - name: Run tests in container
+      - run: docker run app-image npm run test
+
+      - name: Login to docker hub
+      - run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+
+      - name: Tag and push image
+      - run: docker tag app-image ${{secrets.DOCKER_USERNAME}}/app-image:latest
+      - run: docker push ${{secrets.DOCKER_USERNAME}}/app-image:latest
