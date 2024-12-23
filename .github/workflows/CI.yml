@@ -5,16 +5,11 @@ name: Node.js CI
 
 on:
   pull_request:
-    branches:
-      - main
-
-  workflow_dispatch:
-    branches:
-      - main
+    branches: ["main", "dev"]
 
 jobs:
   build:
-    runs-on: ubuntu-latest # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v4
