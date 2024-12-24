@@ -13,24 +13,26 @@ on:
 jobs:
   deploy_image:
     if: github.event.pull_request.merged == true
+
     runs-on: ubuntu-20.04
 
     steps:
       - name: Checkout the repo
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
 
-      - name: Change to app dir
-      - run: cd app
+      - name: Set working directory to ./app
+        working-directory: ./app
 
       - name: Build docker image
-      - run: docker build . -t app-image
+        run: docker build . -t app-image
 
       - name: Run tests in container
-      - run: docker run app-image npm run test
+        run: docker run app-image npm run test
 
       - name: Login to docker hub
-      - run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
 
       - name: Tag and push image
-      - run: docker tag app-image ${{secrets.DOCKER_USERNAME}}/app-image:latest
-      - run: docker push ${{secrets.DOCKER_USERNAME}}/app-image:latest
+        run: |
+          docker tag app-image ${{secrets.DOCKER_USERNAME}}/app-image:latest
+          docker push ${{secrets.DOCKER_USERNAME}}/app-image:latest
