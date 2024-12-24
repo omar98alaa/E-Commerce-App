@@ -11,13 +11,19 @@ jobs:
   build:
     runs-on: ubuntu-20.04
 
+    defaults:
+      run:
+        working-directory: ./app
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Use Node.js 18.x
         uses: actions/setup-node@v4
         with:
           node-version: "18.x"
           cache: "npm"
+          cache-dependency-path: app/package-lock.json
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test
