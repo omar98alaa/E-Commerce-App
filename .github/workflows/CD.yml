@@ -23,15 +23,15 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build docker image
-        run: docker build . -t app-image
+        run: docker build . -t ${{vars.DOCKER_IMAGE_NAME}}
 
       - name: Run tests in container
-        run: docker run app-image npm run test
+        run: docker run ${{vars.DOCKER_IMAGE_NAME}} npm run test
 
       - name: Login to docker hub
         run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
 
       - name: Tag and push image
         run: |
-          docker tag app-image ${{secrets.DOCKER_USERNAME}}/app-image:latest
-          docker push ${{secrets.DOCKER_USERNAME}}/app-image:latest
+          docker tag app-image ${{secrets.DOCKER_USERNAME}}/${{vars.DOCKER_IMAGE_NAME}}:latest
+          docker push ${{secrets.DOCKER_USERNAME}}/${{vars.DOCKER_IMAGE_NAME}}:latest
