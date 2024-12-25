@@ -33,5 +33,5 @@ jobs:
 
       - name: Tag and push image
         run: |
-          docker tag app-image ${{secrets.DOCKER_USERNAME}}/${{vars.DOCKER_IMAGE_NAME}}:latest
+          docker tag ${{vars.DOCKER_IMAGE_NAME}} ${{secrets.DOCKER_USERNAME}}/${{vars.DOCKER_IMAGE_NAME}}:latest
           docker push ${{secrets.DOCKER_USERNAME}}/${{vars.DOCKER_IMAGE_NAME}}:latest
